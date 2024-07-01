@@ -8,6 +8,7 @@ import useDistrict from "../../Hooks/useDistrict";
 import useUpazila from "../../Hooks/useUpazila";
 import useUnion from "../../Hooks/useUnion";
 import { bloodGroup } from "../../../utils/data/bloodGroup.js";
+import useAuth from "../../Hooks/useAuth.jsx";
 
 const Registration = () => {
   const [divisions] = useDivisions();
@@ -26,7 +27,7 @@ const Registration = () => {
     formState: { errors },
   } = useForm();
 
-  const { createUser } = useContext(AuthContext);
+  const { createUser } = useAuth();
 
   const onSubmit = (data) => {
     console.log(data);
@@ -34,11 +35,6 @@ const Registration = () => {
     const selectedDistrict = districs.find((dis) => dis.id === data.district);
     const selectedUpazila = upazilas.find((upz) => upz.id === data.upazila);
     const selectedUnion = unions.find((uni) => uni.id === data.union);
-
-    console.log(selectedDivision?.name);
-    console.log(selectedDistrict?.name);
-    console.log(selectedUpazila?.name);
-    console.log(selectedUnion?.name);
 
     createUser(data.email, data.password)
       .then((result) => {
@@ -48,6 +44,19 @@ const Registration = () => {
       .catch((error) => {
         console.error("Error during registration:", error);
       });
+
+    const userInfo = {
+      name: data.name,
+      email: data.email,
+      image: "adding soon",
+      blood: data.bloodGroup,
+      division: selectedDivision?.name,
+      district: selectedDistrict?.name,
+      upazila: selectedUpazila?.name,
+      union: selectedUnion?.name,
+      role: "donor",
+    };
+    console.log("userInfo", userInfo);
   };
 
   const password = watch("password");
