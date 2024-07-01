@@ -1,13 +1,13 @@
 import { Link } from "react-router-dom";
 import signUp from "../../assets/signup.svg";
 import { useForm } from "react-hook-form";
-import { useContext, useState } from "react";
-import { AuthContext } from "../../Components/Provider/AuthProvider";
-import useDivisions from "../../Hooks/useDivisions";
-import useDistrict from "../../Hooks/useDistrict";
-import useUpazila from "../../Hooks/useUpazila";
-import useUnion from "../../Hooks/useUnion";
 import { bloodGroup } from "../../../utils/data/bloodGroup.js";
+import useDivisions from "../../Hooks/useDivisions.jsx";
+import useUnion from "../../Hooks/useUnion.jsx";
+import useDistrict from "../../Hooks/useDistrict.jsx";
+import useUpazila from "../../Hooks/useUpazila.jsx";
+import useAuth from "../../Hooks/useAuth.jsx";
+import { useState } from "react";
 
 const Registration = () => {
   const [divisions] = useDivisions();
@@ -26,7 +26,7 @@ const Registration = () => {
     formState: { errors },
   } = useForm();
 
-  const { createUser } = useContext(AuthContext);
+  const { createUser } = useAuth();
 
   const onSubmit = (data) => {
     console.log(data);
@@ -34,20 +34,14 @@ const Registration = () => {
     const selectedDistrict = districs.find((dis) => dis.id === data.district);
     const selectedUpazila = upazilas.find((upz) => upz.id === data.upazila);
     const selectedUnion = unions.find((uni) => uni.id === data.union);
-
-    console.log(selectedDivision?.name);
-    console.log(selectedDistrict?.name);
-    console.log(selectedUpazila?.name);
-    console.log(selectedUnion?.name);
-
-    createUser(data.email, data.password)
-      .then((result) => {
-        const loggedUser = result.user;
-        console.log(loggedUser);
-      })
-      .catch((error) => {
-        console.error("Error during registration:", error);
-      });
+    console.log(selectedDivision.name);
+    console.log(selectedDistrict.name);
+    console.log(selectedUpazila.name);
+    console.log(selectedUnion.name);
+    createUser(data.email, data.password).then((result) => {
+      const loggedUser = result.user;
+      console.log(loggedUser);
+    });
   };
 
   const password = watch("password");
@@ -220,7 +214,7 @@ const Registration = () => {
                 name="union"
                 className="input input-bordered"
                 disabled={!upazila}
-                {...register("union")}
+                {...register("union", { required: false })}
               >
                 <option value="">Select Union</option>
                 {filteredUnions.map((union, id) => (
@@ -229,9 +223,9 @@ const Registration = () => {
                   </option>
                 ))}
               </select>
+              {errors.union && <span>This field is required</span>}
             </div>
           </div>
-
           {/* row 5 */}
           <div className="flex justify-center items-center gap-4">
             <div className="form-control w-1/2">
