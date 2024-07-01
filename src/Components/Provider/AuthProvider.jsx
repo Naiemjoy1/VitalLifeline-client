@@ -20,7 +20,7 @@ const AuthProvider = ({ children }) => {
 
   const signIn = (email, password) => {
     setLaoding(true);
-    return signInWithEmailAndPassword(email, password);
+    return signInWithEmailAndPassword(auth, email, password);
   };
 
   const logOut = () => {

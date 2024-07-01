@@ -89,44 +89,46 @@ const Registration = () => {
   );
 
   return (
-    <div className="container mx-auto my-10 min-h-[calc(100vh-246px)] flex justify-center gap-6 items-center">
-      <div className="w-1/2">
-        <img src={signUp} alt="" />
-      </div>
-      <div className="w-1/2">
-        <form className="card-body" onSubmit={handleSubmit(onSubmit)}>
-          {/* row 1 */}
-          <div className="flex justify-center items-center gap-4">
-            <div className="form-control w-1/2">
-              <label className="label">
-                <span className="label-text">Your Email</span>
-              </label>
-              <input
-                type="email"
-                name="email"
-                placeholder="Your Email"
-                className="input input-bordered"
-                {...register("email", { required: true })}
-              />
-              {errors.email && <span>This field is required</span>}
-            </div>
-            <div className="form-control w-1/2">
-              <label className="label">
-                <span className="label-text">Your Name</span>
-              </label>
-              <input
-                type="text"
-                name="name"
-                placeholder="Your Name"
-                className="input input-bordered"
-                {...register("name", { required: true })}
-              />
-              {errors.name && <span>This field is required</span>}
-            </div>
+    <div className="flex items-center justify-center min-h-screen bg-gray-100">
+      <div className="max-w-screen-lg w-full mx-4 md:mx-auto">
+        <div className="flex flex-col md:flex-row items-center">
+          <div className="w-1/2">
+            <img src={signUp} alt="" />
           </div>
-          {/* row 2 */}
-          <div className="flex justify-center items-center gap-4">
-            {/* <div className="form-control w-1/2">
+          <div className="w-1/2">
+            <form className="card-body" onSubmit={handleSubmit(onSubmit)}>
+              {/* row 1 */}
+              <div className="flex justify-center items-center gap-4">
+                <div className="form-control w-1/2">
+                  <label className="label">
+                    <span className="label-text">Your Email</span>
+                  </label>
+                  <input
+                    type="email"
+                    name="email"
+                    placeholder="Your Email"
+                    className="input input-bordered"
+                    {...register("email", { required: true })}
+                  />
+                  {errors.email && <span>This field is required</span>}
+                </div>
+                <div className="form-control w-1/2">
+                  <label className="label">
+                    <span className="label-text">Your Name</span>
+                  </label>
+                  <input
+                    type="text"
+                    name="name"
+                    placeholder="Your Name"
+                    className="input input-bordered"
+                    {...register("name", { required: true })}
+                  />
+                  {errors.name && <span>This field is required</span>}
+                </div>
+              </div>
+              {/* row 2 */}
+              <div className="flex justify-center items-center gap-4">
+                {/* <div className="form-control w-1/2">
               <label className="label">
                 <span className="label-text">Profile Image</span>
               </label>
@@ -138,181 +140,193 @@ const Registration = () => {
               />
               {errors.image && <span>This field is required</span>}
             </div> */}
-            <div className="form-control w-1/2">
-              <label className="label">
-                <span className="label-text">Your Blood Group</span>
-              </label>
-              <select
-                name="bloodGroup"
-                className="input input-bordered"
-                {...register("bloodGroup", { required: true })}
-              >
-                <option value="">Select Blood Group</option>
-                {bloodGroup.map((blood, index) => (
-                  <option key={index} value={blood.group}>
-                    {blood.group}
-                  </option>
-                ))}
-              </select>
-              {errors.bloodGroup && <span>This field is required</span>}
-            </div>
-          </div>
-          {/* row 3 */}
-          <div className="flex justify-center items-center gap-4">
-            <div className="form-control w-1/2">
-              <label className="label">
-                <span className="label-text">Divisions</span>
-              </label>
-              <select
-                name="division"
-                className="input input-bordered"
-                {...register("division", { required: true })}
-                onChange={handleDivision}
-              >
-                <option value="">Select Division</option>
-                {divisions.map((division, id) => (
-                  <option key={id} value={division.id}>
-                    {division.name}
-                  </option>
-                ))}
-              </select>
-              {errors.division && <span>This field is required</span>}
-            </div>
-            <div className="form-control w-1/2">
-              <label className="label">
-                <span className="label-text">District</span>
-              </label>
-              <select
-                name="district"
-                className="input input-bordered"
-                {...register("district", { required: true })}
-                onChange={handleDistrict}
-                disabled={!division}
-              >
-                <option value="">Select District</option>
-                {filteredDistricts.map((district, id) => (
-                  <option key={id} value={district.id}>
-                    {district.name}
-                  </option>
-                ))}
-              </select>
-              {errors.district && <span>This field is required</span>}
-            </div>
-          </div>
-          {/* row 4 */}
-          <div className="flex justify-center items-center gap-4">
-            <div className="form-control w-1/2">
-              <label className="label">
-                <span className="label-text">Upazila</span>
-              </label>
-              <select
-                name="upazila"
-                className="input input-bordered"
-                {...register("upazila", { required: true })}
-                onChange={handleUpazilaChange}
-                disabled={!district}
-              >
-                <option value="">Select Upazila</option>
-                {filteredUpazilas.map((upazila, id) => (
-                  <option key={id} value={upazila.id}>
-                    {upazila.name}
-                  </option>
-                ))}
-              </select>
-              {errors.upazila && <span>This field is required</span>}
-            </div>
-            <div className="form-control w-1/2">
-              <label className="label">
-                <span className="label-text">Union</span>
-              </label>
-              <select
-                name="union"
-                className="input input-bordered"
-                disabled={!upazila}
-                {...register("union")}
-              >
-                <option value="">Select Union</option>
-                {filteredUnions.map((union, id) => (
-                  <option key={id} value={union.id}>
-                    {union.name}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </div>
+                <div className="form-control w-1/2">
+                  <label className="label">
+                    <span className="label-text">Your Blood Group</span>
+                  </label>
+                  <select
+                    name="bloodGroup"
+                    className="input input-bordered"
+                    {...register("bloodGroup", { required: true })}
+                  >
+                    <option value="">Select Blood Group</option>
+                    {bloodGroup.map((blood, index) => (
+                      <option key={index} value={blood.group}>
+                        {blood.group}
+                      </option>
+                    ))}
+                  </select>
+                  {errors.bloodGroup && <span>This field is required</span>}
+                </div>
+              </div>
+              {/* row 3 */}
+              <div className="flex justify-center items-center gap-4">
+                <div className="form-control w-1/2">
+                  <label className="label">
+                    <span className="label-text">Divisions</span>
+                  </label>
+                  <select
+                    name="division"
+                    className="input input-bordered"
+                    {...register("division", { required: true })}
+                    onChange={handleDivision}
+                  >
+                    <option value="">Select Division</option>
+                    {divisions.map((division, id) => (
+                      <option key={id} value={division.id}>
+                        {division.name}
+                      </option>
+                    ))}
+                  </select>
+                  {errors.division && <span>This field is required</span>}
+                </div>
+                <div className="form-control w-1/2">
+                  <label className="label">
+                    <span className="label-text">District</span>
+                  </label>
+                  <select
+                    name="district"
+                    className="input input-bordered"
+                    {...register("district", { required: true })}
+                    onChange={handleDistrict}
+                    disabled={!division}
+                  >
+                    <option value="">Select District</option>
+                    {filteredDistricts.map((district, id) => (
+                      <option key={id} value={district.id}>
+                        {district.name}
+                      </option>
+                    ))}
+                  </select>
+                  {errors.district && <span>This field is required</span>}
+                </div>
+              </div>
+              {/* row 4 */}
+              <div className="flex justify-center items-center gap-4">
+                <div className="form-control w-1/2">
+                  <label className="label">
+                    <span className="label-text">Upazila</span>
+                  </label>
+                  <select
+                    name="upazila"
+                    className="input input-bordered"
+                    {...register("upazila", { required: true })}
+                    onChange={handleUpazilaChange}
+                    disabled={!district}
+                  >
+                    <option value="">Select Upazila</option>
+                    {filteredUpazilas.map((upazila, id) => (
+                      <option key={id} value={upazila.id}>
+                        {upazila.name}
+                      </option>
+                    ))}
+                  </select>
+                  {errors.upazila && <span>This field is required</span>}
+                </div>
+                <div className="form-control w-1/2">
+                  <label className="label">
+                    <span className="label-text">Union</span>
+                  </label>
+                  <select
+                    name="union"
+                    className="input input-bordered"
+                    disabled={!upazila}
+                    {...register("union")}
+                  >
+                    <option value="">Select Union</option>
+                    {filteredUnions.map((union, id) => (
+                      <option key={id} value={union.id}>
+                        {union.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
 
-          {/* row 5 */}
-          <div className="flex justify-center items-center gap-4">
-            <div className="form-control w-1/2">
-              <label className="label">
-                <span className="label-text">Password</span>
-              </label>
-              <input
-                type="password"
-                placeholder="Password"
-                name="password"
-                className="input input-bordered"
-                {...register("password", {
-                  required: true,
-                  minLength: 6,
-                  maxLength: 20,
-                  pattern:
-                    /(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*()\-__+.])(?=.*[a-z])/,
-                })}
-              />
-              {errors.password?.type === "required" && (
-                <p className="text-red-600">Password is required</p>
-              )}
-              {errors.password?.type === "minLength" && (
-                <p className="text-red-600">
-                  Password must be at least 6 characters
-                </p>
-              )}
-              {errors.password?.type === "maxLength" && (
-                <p className="text-red-600">
-                  Password must be less than 20 characters
-                </p>
-              )}
-              {errors.password?.type === "pattern" && (
-                <p className="text-red-600">
-                  Password must have one uppercase, one lowercase, one number,
-                  and one special character
-                </p>
-              )}
-            </div>
-            <div className="form-control w-1/2">
-              <label className="label">
-                <span className="label-text">Confirm Password</span>
-              </label>
-              <input
-                type="password"
-                placeholder="Confirm Password"
-                name="confirmPassword"
-                className="input input-bordered"
-                {...register("confirmPassword", {
-                  required: true,
-                  validate: (value) =>
-                    value === password || "The passwords do not match",
-                })}
-              />
-              {errors.confirmPassword && (
-                <p className="text-red-600">{errors.confirmPassword.message}</p>
-              )}
-            </div>
-          </div>
+              {/* row 5 */}
+              <div className="flex justify-center items-center gap-4">
+                <div className="form-control w-1/2">
+                  <label className="label">
+                    <span className="label-text">Password</span>
+                  </label>
+                  <input
+                    type="password"
+                    placeholder="Password"
+                    name="password"
+                    className="input input-bordered"
+                    {...register("password", {
+                      required: true,
+                      minLength: 6,
+                      maxLength: 20,
+                      pattern:
+                        /(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*()\-__+.])(?=.*[a-z])/,
+                    })}
+                  />
+                  {errors.password?.type === "required" && (
+                    <p className="text-red-600">Password is required</p>
+                  )}
+                  {errors.password?.type === "minLength" && (
+                    <p className="text-red-600">
+                      Password must be at least 6 characters
+                    </p>
+                  )}
+                  {errors.password?.type === "maxLength" && (
+                    <p className="text-red-600">
+                      Password must be less than 20 characters
+                    </p>
+                  )}
+                  {errors.password?.type === "pattern" && (
+                    <p className="text-red-600">
+                      Password must have one uppercase, one lowercase, one
+                      number, and one special character
+                    </p>
+                  )}
+                </div>
+                <div className="form-control w-1/2">
+                  <label className="label">
+                    <span className="label-text">Confirm Password</span>
+                  </label>
+                  <input
+                    type="password"
+                    placeholder="Confirm Password"
+                    name="confirmPassword"
+                    className="input input-bordered"
+                    {...register("confirmPassword", {
+                      required: true,
+                      validate: (value) =>
+                        value === password || "The passwords do not match",
+                    })}
+                  />
+                  {errors.confirmPassword && (
+                    <p className="text-red-600">
+                      {errors.confirmPassword.message}
+                    </p>
+                  )}
+                </div>
+              </div>
 
-          <div className="form-control mt-6">
-            <button type="submit" className="btn btn-primary text-white">
-              Registration
+              <div className="form-control mt-6">
+                <button type="submit" className="btn btn-primary text-white">
+                  Registration
+                </button>
+              </div>
+
+              <p className="text-center text-sm">
+                Already have an account? Please{" "}
+                <Link to="/login" className="text-blue-500">
+                  Login
+                </Link>
+              </p>
+            </form>
+          </div>
+        </div>
+        <div className="flex justify-center mt-10">
+          <Link to="/">
+            <button className="btn btn-sm btn-primary text-white">
+              Back Home
             </button>
-          </div>
-          <p className="text-center">
-            Already have an account? Please
-            <Link to="/login">
-              <button className="btn btn-link">Login</button>
-            </Link>
-          </p>
-        </form>
+          </Link>
+        </div>
       </div>
     </div>
   );
