@@ -8,18 +8,23 @@ import {
 } from "react-simple-captcha";
 import useAuth from "../../Hooks/useAuth";
 import Swal from "sweetalert2";
+import { IoIosEyeOff, IoMdEye } from "react-icons/io";
+import { useForm } from "react-hook-form";
 
 const Login = () => {
   const [disabled, setDisabled] = useState(true);
   const captchaRef = useRef(null);
   const { signIn } = useAuth();
+  const [showPassword, setShowPassword] = useState(false);
 
-  const handleLogin = (event) => {
-    event.preventDefault();
-    const form = event.target;
-    const email = form.email.value;
-    const password = form.password.value;
-    console.log(email, password);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+
+  const handleLogin = (data) => {
+    const { email, password } = data;
     signIn(email, password).then((result) => {
       const user = result.user;
       console.log(user);
@@ -54,7 +59,7 @@ const Login = () => {
             <img src={signUp} alt="Signup" className="max-w-full h-auto" />
           </div>
           <div className="w-full md:w-1/2 flex justify-center">
-            <form onSubmit={handleLogin} className="card-body">
+            <form onSubmit={handleSubmit(handleLogin)} className="card-body">
               <div className="form-control">
                 <label className="label">
                   <span className="label-text">Email</span>
@@ -64,28 +69,42 @@ const Login = () => {
                   name="email"
                   placeholder="Email"
                   className="input input-bordered"
-                  required
+                  {...register("email", { required: "Email is required" })}
                 />
+                {errors.email && (
+                  <span className="text-red-500">{errors.email.message}</span>
+                )}
               </div>
               <div className="form-control">
                 <label className="label">
                   <span className="label-text">Password</span>
                 </label>
-                <input
-                  type="password"
-                  name="password"
-                  placeholder="Password"
-                  className="input input-bordered"
-                  required
-                />
-                <label className="label">
-                  <a href="#" className="label-text-alt link link-hover">
-                    Forgot password?
-                  </a>
-                </label>
+                <div className="relative">
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    name="password"
+                    placeholder="Password"
+                    className="input input-bordered w-full"
+                    {...register("password", {
+                      required: "Password is required",
+                    })}
+                  />
+                  <span
+                    className="absolute top-4 right-4"
+                    onClick={() => setShowPassword(!showPassword)}
+                  >
+                    {showPassword ? <IoMdEye /> : <IoIosEyeOff />}
+                  </span>
+                </div>
+                {errors.password && (
+                  <span className="text-red-500">
+                    {errors.password.message}
+                  </span>
+                )}
               </div>
               <div className="form-control">
                 <label className="label">
+                  <span className="label-text">Captcha</span>
                   <LoadCanvasTemplate />
                 </label>
                 <input
@@ -93,7 +112,7 @@ const Login = () => {
                   onBlur={handleValidateCaptcha}
                   type="text"
                   name="captcha"
-                  placeholder="Type the captcha "
+                  placeholder="Type the captcha"
                   className="input input-bordered"
                   required
                 />
@@ -110,7 +129,7 @@ const Login = () => {
               <p className="text-center text-sm">
                 New here? Please{" "}
                 <Link to="/registration" className="text-blue-500">
-                  Registration
+                  Register
                 </Link>
               </p>
             </form>

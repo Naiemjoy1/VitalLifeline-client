@@ -1,14 +1,14 @@
 import { Link } from "react-router-dom";
 import signUp from "../../assets/signup.svg";
 import { useForm } from "react-hook-form";
-import { useContext, useState } from "react";
-import { AuthContext } from "../../Components/Provider/AuthProvider";
+import { useState } from "react";
 import useDivisions from "../../Hooks/useDivisions";
 import useDistrict from "../../Hooks/useDistrict";
 import useUpazila from "../../Hooks/useUpazila";
 import useUnion from "../../Hooks/useUnion";
 import { bloodGroup } from "../../../utils/data/bloodGroup.js";
 import useAuth from "../../Hooks/useAuth.jsx";
+import { IoIosEyeOff, IoMdEye } from "react-icons/io";
 
 const Registration = () => {
   const [divisions] = useDivisions();
@@ -19,6 +19,26 @@ const Registration = () => {
   const [division, setDivision] = useState("");
   const [district, setDistrict] = useState("");
   const [upazila, setUpazila] = useState("");
+
+  const [showPassword, setShowPassword] = useState(false);
+  const passwordValidation = (value) => {
+    const regexUpperCase = /[A-Z]/;
+    const regexLowerCase = /[a-z]/;
+
+    if (!regexUpperCase.test(value)) {
+      return "Password must contain at least one uppercase letter";
+    }
+
+    if (!regexLowerCase.test(value)) {
+      return "Password must contain at least one lowercase letter";
+    }
+
+    if (value.length < 6) {
+      return "Password must be at least 6 characters long";
+    }
+
+    return true;
+  };
 
   const {
     register,
@@ -249,19 +269,28 @@ const Registration = () => {
                   <label className="label">
                     <span className="label-text">Password</span>
                   </label>
-                  <input
-                    type="password"
-                    placeholder="Password"
-                    name="password"
-                    className="input input-bordered"
-                    {...register("password", {
-                      required: true,
-                      minLength: 6,
-                      maxLength: 20,
-                      pattern:
-                        /(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*()\-__+.])(?=.*[a-z])/,
-                    })}
-                  />
+                  <div className=" relative ">
+                    <input
+                      type={showPassword ? "text" : "password"}
+                      placeholder="Password"
+                      name="password"
+                      className="input input-bordered"
+                      {...register("password", {
+                        required: true,
+                        minLength: 6,
+                        maxLength: 20,
+                        pattern:
+                          /(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*()\-__+.])(?=.*[a-z])/,
+                      })}
+                    />
+                    <span
+                      className=" absolute top-4 right-4"
+                      onClick={() => setShowPassword(!showPassword)}
+                    >
+                      {showPassword ? <IoMdEye /> : <IoIosEyeOff />}
+                    </span>
+                  </div>
+
                   {errors.password?.type === "required" && (
                     <p className="text-red-600">Password is required</p>
                   )}
@@ -287,7 +316,7 @@ const Registration = () => {
                     <span className="label-text">Confirm Password</span>
                   </label>
                   <input
-                    type="password"
+                    type={showPassword ? "text" : "password"}
                     placeholder="Confirm Password"
                     name="confirmPassword"
                     className="input input-bordered"
