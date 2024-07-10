@@ -19,8 +19,12 @@ const Registration = () => {
   const [division, setDivision] = useState("");
   const [district, setDistrict] = useState("");
   const [upazila, setUpazila] = useState("");
+  const [imageFile, setImageFile] = useState(null);
 
   const [showPassword, setShowPassword] = useState(false);
+
+  const image_hosting_key = import.meta.env.VITE_IMGBB_API;
+  const image_hosting_api = `https://api.imgbb.com/1/upload?key=${image_hosting_key}`;
 
   const {
     register,
@@ -29,36 +33,48 @@ const Registration = () => {
     formState: { errors },
   } = useForm();
 
-  const { createUser } = useAuth();
+  const { createUser, updateUserProfile } = useAuth();
 
-  const onSubmit = (data) => {
-    console.log(data);
-    const selectedDivision = divisions.find((div) => div.id === data.division);
-    const selectedDistrict = districs.find((dis) => dis.id === data.district);
-    const selectedUpazila = upazilas.find((upz) => upz.id === data.upazila);
-    const selectedUnion = unions.find((uni) => uni.id === data.union);
+  const onSubmit = async (data) => {
+    try {
+      const selectedDivision = divisions.find(
+        (div) => div.id === data.division
+      );
+      const selectedDistrict = districs.find((dis) => dis.id === data.district);
+      const selectedUpazila = upazilas.find((upz) => upz.id === data.upazila);
+      const selectedUnion = unions.find((uni) => uni.id === data.union);
 
-    createUser(data.email, data.password)
-      .then((result) => {
-        const loggedUser = result.user;
-        console.log(loggedUser);
-      })
-      .catch((error) => {
-        console.error("Error during registration:", error);
+      const formData = new FormData();
+      formData.append("image", imageFile);
+
+      const response = await fetch(image_hosting_api, {
+        method: "POST",
+        body: formData,
       });
 
-    const userInfo = {
-      name: data.name,
-      email: data.email,
-      image: "adding soon",
-      blood: data.bloodGroup,
-      division: selectedDivision?.name,
-      district: selectedDistrict?.name,
-      upazila: selectedUpazila?.name,
-      union: selectedUnion?.name,
-      role: "donor",
-    };
-    console.log("userInfo", userInfo);
+      const result = await response.json();
+      const displayUrl = result.data.display_url;
+      console.log("displayUrl", displayUrl);
+
+      await createUser(data.email, data.password);
+      await updateUserProfile(data.name, displayUrl);
+
+      const userInfo = {
+        name: data.name,
+        email: data.email,
+        image: displayUrl,
+        blood: data.bloodGroup,
+        division: selectedDivision?.name,
+        district: selectedDistrict?.name,
+        upazila: selectedUpazila?.name,
+        union: selectedUnion?.name,
+        role: "donor",
+      };
+
+      console.log("userInfo", userInfo);
+    } catch (error) {
+      console.error("Error during registration:", error);
+    }
   };
 
   const password = watch("password");
@@ -76,6 +92,10 @@ const Registration = () => {
 
   const handleUpazilaChange = (event) => {
     setUpazila(event.target.value);
+  };
+
+  const handleImageChange = (event) => {
+    setImageFile(event.target.files[0]);
   };
 
   const filteredDistricts = districs.filter(
@@ -130,18 +150,17 @@ const Registration = () => {
               </div>
               {/* row 2 */}
               <div className="flex justify-center items-center gap-4">
-                {/* <div className="form-control w-1/2">
-              <label className="label">
-                <span className="label-text">Profile Image</span>
-              </label>
-              <input
-                type="file"
-                name="image"
-                className="file-input w-full max-w-xs"
-                {...register("image", { required: true })}
-              />
-              {errors.image && <span>This field is required</span>}
-            </div> */}
+                <div className="form-control w-1/2">
+                  <label className="label">
+                    <span className="label-text">Profile Image</span>
+                  </label>
+                  <input
+                    type="file"
+                    name="image"
+                    className="file-input w-full max-w-xs"
+                    onChange={handleImageChange}
+                  />
+                </div>
                 <div className="form-control w-1/2">
                   <label className="label">
                     <span className="label-text">Your Blood Group</span>
@@ -251,7 +270,7 @@ const Registration = () => {
                   <label className="label">
                     <span className="label-text">Password</span>
                   </label>
-                  <div className=" relative ">
+                  <div className="relative">
                     <input
                       type={showPassword ? "text" : "password"}
                       placeholder="Password"
@@ -266,7 +285,7 @@ const Registration = () => {
                       })}
                     />
                     <span
-                      className=" absolute top-4 right-4"
+                      className="absolute top-4 right-4"
                       onClick={() => setShowPassword(!showPassword)}
                     >
                       {showPassword ? <IoMdEye /> : <IoIosEyeOff />}

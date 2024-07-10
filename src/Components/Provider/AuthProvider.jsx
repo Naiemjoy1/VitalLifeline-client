@@ -3,6 +3,7 @@ import {
   onAuthStateChanged,
   signInWithEmailAndPassword,
   signOut,
+  updateProfile,
 } from "firebase/auth";
 import { createContext, useEffect, useState } from "react";
 import auth from "../Firebase/firebaeConfig";
@@ -21,6 +22,28 @@ const AuthProvider = ({ children }) => {
   const signIn = (email, password) => {
     setLaoding(true);
     return signInWithEmailAndPassword(auth, email, password);
+  };
+
+  const updateUserProfile = async (name, photo) => {
+    try {
+      await updateProfile(auth.currentUser, {
+        displayName: name,
+        photoURL: photo,
+      });
+      console.log("Profile updated successfully!");
+
+      // Update local user state
+      setUser({
+        ...user,
+        displayName: name,
+        photoURL: photo,
+      });
+
+      return { success: true };
+    } catch (error) {
+      console.error("Error updating user profile:", error);
+      return { success: false, error };
+    }
   };
 
   const logOut = () => {
@@ -45,6 +68,7 @@ const AuthProvider = ({ children }) => {
     createUser,
     signIn,
     logOut,
+    updateUserProfile,
   };
 
   return (

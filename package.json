@@ -12,6 +12,7 @@
   "dependencies": {
     "@egjs/flicking-plugins": "^4.7.1",
     "@egjs/react-flicking": "^4.11.3",
+    "axios": "^1.7.2",
     "firebase": "^10.12.2",
     "localforage": "^1.10.0",
     "match-sorter": "^6.3.4",
