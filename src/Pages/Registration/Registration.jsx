@@ -21,24 +21,6 @@ const Registration = () => {
   const [upazila, setUpazila] = useState("");
 
   const [showPassword, setShowPassword] = useState(false);
-  const passwordValidation = (value) => {
-    const regexUpperCase = /[A-Z]/;
-    const regexLowerCase = /[a-z]/;
-
-    if (!regexUpperCase.test(value)) {
-      return "Password must contain at least one uppercase letter";
-    }
-
-    if (!regexLowerCase.test(value)) {
-      return "Password must contain at least one lowercase letter";
-    }
-
-    if (value.length < 6) {
-      return "Password must be at least 6 characters long";
-    }
-
-    return true;
-  };
 
   const {
     register,
