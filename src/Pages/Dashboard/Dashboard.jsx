@@ -1,3 +1,4 @@
+import { NavLink } from "react-router-dom";
 import useAuth from "../../Hooks/useAuth";
 
 const Dashboard = () => {
@@ -11,12 +12,15 @@ const Dashboard = () => {
             <div className="divider"></div>
           </section>
           <section>
-            <p>pages</p>
-            <p>pages</p>
-            <p>pages</p>
-            <p>pages</p>
+            <ul className="menu text-lg gap-4">
+              <NavLink to="/dashboard/all-users">
+                <li>All Users</li>
+              </NavLink>
+              <li>Blood Request</li>
+            </ul>
           </section>
           <section className="flex flex-col items-center text-center">
+            <div className="divider"></div>
             <div className="avatar online">
               <div className="w-14 rounded-full">
                 <img

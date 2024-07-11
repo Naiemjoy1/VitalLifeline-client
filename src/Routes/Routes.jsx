@@ -8,6 +8,8 @@ import Blog from "../Pages/Blog/Blog";
 import Dashboard from "../Pages/Dashboard/Dashboard";
 import Login from "../Pages/Login/Login";
 import Registration from "../Pages/Registration/Registration";
+import Users from "../Pages/Dashboard/Admin/Users/Users";
+import BloodRequest from "../Pages/Dashboard/Admin/BloodRequest/BloodRequest";
 
 export const router = createBrowserRouter([
   {
@@ -42,6 +44,16 @@ export const router = createBrowserRouter([
       {
         path: "/dashboard",
         element: <Dashboard></Dashboard>,
+        children: [
+          {
+            path: "all-users",
+            element: <Users></Users>,
+          },
+          {
+            path: "blood-donation-request",
+            element: <BloodRequest></BloodRequest>,
+          },
+        ],
       },
     ],
   },
