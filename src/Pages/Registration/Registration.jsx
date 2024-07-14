@@ -9,6 +9,8 @@ import useUnion from "../../Hooks/useUnion";
 import { bloodGroup } from "../../../utils/data/bloodGroup.js";
 import useAuth from "../../Hooks/useAuth.jsx";
 import { IoIosEyeOff, IoMdEye } from "react-icons/io";
+import useAxiosPublic from "../../Hooks/useAxiosPublic.jsx";
+import Swal from "sweetalert2";
 
 const Registration = () => {
   const [divisions] = useDivisions();
@@ -30,10 +32,12 @@ const Registration = () => {
     register,
     handleSubmit,
     watch,
+    reset,
     formState: { errors },
   } = useForm();
 
   const { createUser, updateUserProfile } = useAuth();
+  const axiosPublic = useAxiosPublic();
 
   const onSubmit = async (data) => {
     try {
@@ -56,22 +60,38 @@ const Registration = () => {
       const displayUrl = result.data.display_url;
       console.log("displayUrl", displayUrl);
 
-      await createUser(data.email, data.password);
-      await updateUserProfile(data.name, displayUrl);
+      await createUser(data.email, data.password).then((result) => {
+        const loggedUser = result.user;
+        console.log(loggedUser);
+        updateUserProfile(data.name, displayUrl).then(() => {
+          const userInfo = {
+            name: data.name,
+            email: data.email,
+            image: displayUrl,
+            blood: data.bloodGroup,
+            division: selectedDivision?.name,
+            district: selectedDistrict?.name,
+            upazila: selectedUpazila?.name,
+            union: selectedUnion?.name,
+            role: "donor",
+          };
+          console.log("userInfo", userInfo);
 
-      const userInfo = {
-        name: data.name,
-        email: data.email,
-        image: displayUrl,
-        blood: data.bloodGroup,
-        division: selectedDivision?.name,
-        district: selectedDistrict?.name,
-        upazila: selectedUpazila?.name,
-        union: selectedUnion?.name,
-        role: "donor",
-      };
-
-      console.log("userInfo", userInfo);
+          axiosPublic.post("/users", userInfo).then((res) => {
+            if (res.data.insertedId) {
+              console.log("users added to database");
+              reset();
+              Swal.fire({
+                position: "top-end",
+                icon: "success",
+                title: "Your work has been saved",
+                showConfirmButton: false,
+                timer: 1500,
+              });
+            }
+          });
+        });
+      });
     } catch (error) {
       console.error("Error during registration:", error);
     }
