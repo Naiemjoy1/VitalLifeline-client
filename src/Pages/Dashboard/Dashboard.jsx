@@ -1,4 +1,4 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, Outlet } from "react-router-dom";
 import useAuth from "../../Hooks/useAuth";
 
 const Dashboard = () => {
@@ -16,7 +16,9 @@ const Dashboard = () => {
               <NavLink to="/dashboard/all-users">
                 <li>All Users</li>
               </NavLink>
-              <li>Blood Request</li>
+              <NavLink to="/dashboard/blood-donation-request">
+                <li>Blood Request</li>
+              </NavLink>
             </ul>
           </section>
           <section className="flex flex-col items-center text-center">
@@ -36,7 +38,9 @@ const Dashboard = () => {
             <p>{user?.email}</p>
           </section>
         </div>
-        <div className="w-3/4 bg-white px-10 py-6 rounded-xl">right side</div>
+        <div className="w-3/4 bg-white px-10 py-6 rounded-xl">
+          <Outlet></Outlet>
+        </div>
       </div>
     </div>
   );
